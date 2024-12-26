@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>WayWise – Главная</title>
+  
+  <!-- Leaflet CSS -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
+    integrity="sha256-sA+e2AGtfYk+hHEJVM5DhgFD4aw6jG1P7lQfWmqEoPo="
+    crossorigin=""/>
+
+  <!-- Leaflet JS -->
+  <script src="https://unpkg.com/leaflet@1.9.3/dist/leaflet.js"
+    integrity="sha256-o9N1jE7RRA6/Qs6GF5VqM4hGZGSYmVZVhF6pIhZ+1IA="
+    crossorigin=""></script>
+
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 1rem;
+      border-bottom: 1px solid #ddd;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    .header__profile-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      cursor: pointer;
+      margin-right: 1rem;
+    }
+
+    .header__profile-link img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .header__title-link {
+      text-decoration: none;
+      color: #333;
+    }
+
+    .header__title {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    .header__actions {
+      margin-left: auto;
+      display: flex;
+      gap: 1rem;
+    }
+
+    .header__action {
+      text-decoration: none;
+      color: #377dff;
+      font-weight: bold;
+      padding: 0.5rem 1rem;
+      border: 1px solid #377dff;
+      border-radius: 5px;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .header__action:hover {
+      background-color: #377dff;
+      color: white;
+    }
+
+    body {
+      margin: 0;
+      padding-top: 70px;
+      background-color: #f7f8fa;
+      color: #333;
+      min-height: 100vh;
+      overflow-y: scroll;
+    }
+
+    #mapBanner {
+      width: 90%;
+      max-width: 1000px;
+      height: 200px;
+      margin: 2rem auto;
+      border-radius: 10px;
+      background-color: #377dff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      transition: height 0.5s ease;
+      cursor: pointer;
+      color: #fff;
+      font-size: 1.5rem;
+      overflow: hidden;
+    }
+
+    #mapBanner.expanded {
+      height: 80vh;
+    }
+
+    .map-content {
+      display: none;
+      flex-direction: column;
+      height: 100%;
+      width: 100%;
+    }
+
+    #mapBanner.expanded .map-content {
+      display: flex;
+    }
+
+    #map {
+      flex: 1;
+      border-radius: 8px;
+      margin-bottom: 1rem;
+    }
+
+    .form-container {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .form-container input {
+      flex: 1;
+      min-width: 150px;
+      padding: 0.5rem;
+      font-size: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    .form-container button {
+      padding: 0.6rem 1.2rem;
+      font-size: 1rem;
+      background-color: #fff;
+      color: #377dff;
+      border: 2px solid #377dff;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    .form-container button:hover {
+      background-color: #377dff;
+      color: #fff;
+    }
+
+    .recommendations {
+      margin: 2rem auto;
+      width: 90%;
+      max-width: 1000px;
+    }
+
+    .recommendations h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .recommendations__cards {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    .recommendations__card {
+      background-color: #fff;
+      border-radius: 6px;
+      padding: 0.5rem;
+      width: 180px; 
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
+      text-align: center;
+    }
+
+    .recommendations__card img {
+      width: 100%;
+      border-radius: 4px;
+      margin-bottom: 0.5rem;
+    }
+
+    .recommendations__card p {
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .recommendations__card span {
+      color: #666;
+      font-size: 0.9rem;
+    }
+
+    @media (max-width: 600px) {
+      .form-container {
+        flex-direction: column;
+        align-items: stretch;
+      }
+
+      .form-container button {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <a href="{% url 'profile' %}" class="header__profile-link">
+      <img src="https://via.placeholder.com/40" alt="Avatar"/>
+    </a>
+    <a href="{% url 'home' %}" class="header__title-link">
+      <h1 class="header__title">WayWise</h1>
+    </a>
+    <div class="header__actions">
+      <a href="{% url 'register' %}" class="header__action">Регистрация</a>
+      <a href="{% url 'login' %}" class="header__action">Вход</a>
+    </div>
+  </header>
+
+  <div id="mapBanner">
+    Нажмите, чтобы открыть карту
+    <div class="map-content">
+      <div id="map"></div>
+      <div class="form-container">
+        <input type="text" id="from" placeholder="Откуда? (широта, долгота)">
+        <input type="text" id="to" placeholder="Куда? (широта, долгота)">
+        <input type="text" id="preferences" placeholder="Пожелания">
+        <button id="buildRoute">Построить маршрут</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="recommendations">
+    <h2>Рекомендации для вас</h2>
+    <div class="recommendations__cards">
+      <div class="recommendations__card">
+        <img src="https://via.placeholder.com/200x120" alt="Paris"/>
+        <p>Посетите город любви</p>
+        <span>Париж</span>
+      </div>
+      <div class="recommendations__card">
+        <img src="https://via.placeholder.com/200x120" alt="Desert"/>
+        <p>Испытайте закат в пустыне</p>
+        <span>Марракеш</span>
+      </div>
+      <div class="recommendations__card">
+        <img src="https://via.placeholder.com/200x120" alt="London"/>
+        <p>Исследуйте Лондон</p>
+        <span>Лондон</span>
+      </div>
+      <!-- Добавьте больше карточек по необходимости -->
+    </div>
+  </div>
+
+  <script>
+    const mapBanner = document.getElementById('mapBanner');
+    const mapContent = document.querySelector('.map-content');
+    const buildRouteButton = document.getElementById('buildRoute');
+    let mapInitialized = false;
+    let map, routeLine;
+    const markers = [];
+
+    function initializeMap() {
+      if (mapInitialized) {
+        map.invalidateSize();
+        return;
+      }
+
+      map = L.map('map').setView([55.7558, 37.6176], 13);
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+      mapInitialized = true;
+    }
+
+    mapBanner.addEventListener('click', function(event) {
+      if (event.target.closest('.form-container')) return;
+      mapBanner.classList.toggle('expanded');
+
+      if (mapBanner.classList.contains('expanded')) {
+        mapBanner.textContent = '';
+        mapBanner.appendChild(mapContent);
+        initializeMap();
+      } else {
+        mapBanner.textContent = 'Нажмите, чтобы открыть карту';
+      }
+    });
+
+    buildRouteButton.addEventListener('click', function() {
+      const from = document.getElementById('from').value.trim();
+      const to = document.getElementById('to').value.trim();
+      const preferences = document.getElementById('preferences').value.trim();
+
+      if (!from || !to) {
+        alert('Пожалуйста, заполните поля "Откуда?" и "Куда?".');
+        return;
+      }
+
+      const fromCoords = from.split(',').map(coord => parseFloat(coord.trim()));
+      const toCoords = to.split(',').map(coord => parseFloat(coord.trim()));
+
+      if (fromCoords.length !== 2 || toCoords.length !== 2 || 
+          isNaN(fromCoords[0]) || isNaN(fromCoords[1]) || 
+          isNaN(toCoords[0]) || isNaN(toCoords[1])) {
+        alert('Координаты должны быть в формате "широта, долгота".');
+        return;
+      }
+
+      if (map.hasLayer(routeLine)) map.removeLayer(routeLine);
+      markers.forEach(marker => map.removeLayer(marker));
+
+      const startMarker = L.marker(fromCoords, { title: "Старт" }).addTo(map);
+      const endMarker = L.marker(toCoords, { title: "Финиш" }).addTo(map);
+      markers.push(startMarker, endMarker);
+
+      map.fitBounds([fromCoords, toCoords]);
+
+      fetch('/build_route/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': '{{ csrf_token }}'
+        },
+        body: JSON.stringify({ start: fromCoords, end: toCoords })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.route) {
+          routeLine = L.polyline(data.route, { color: 'blue' }).addTo(map);
+        } else {
+          alert('Не удалось построить маршрут.');
+        }
+      });
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Профиль – WayWise</title>
+  <style>
+    /* Сброс базовых стилей */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Шапка */
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background-color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 1rem;
+      border-bottom: 1px solid #ddd;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+
+    /* Ссылка на профиль, обёрнутая вокруг аватара */
+    .header__profile-link {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      cursor: pointer;
+      margin-right: 1rem;
+    }
+
+    /* Аватар внутри ссылки (круглый) */
+    .header__profile-link img {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Ссылка на главную страницу обёрнутая вокруг названия */
+    .header__title-link {
+      text-decoration: none;
+      color: #333;
+    }
+
+    /* Заголовок WayWise */
+    .header__title {
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+
+    /* Чтобы контент не «залезал» под шапку */
+    body {
+      margin: 0;
+      padding-top: 70px; /* Высота шапки */
+      background-color: #f7f8fa;
+      color: #333;
+      min-height: 100vh;
+      overflow-y: scroll;
+    }
+
+    /* Контейнер страницы профиля */
+    .profile-container {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 1rem;
+    }
+
+    /* Карточка профиля */
+    .profile-card {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+    }
+
+    .profile-card h2 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.5rem;
+    }
+
+    /* Поля профиля (имя, фамилия, почта) */
+    .profile-field {
+      margin-bottom: 1rem;
+    }
+
+    .profile-field label {
+      font-weight: 600;
+      color: #666;
+      display: block;
+      margin-bottom: 0.3rem;
+    }
+
+    .profile-field span {
+      display: block;
+      color: #333;
+      font-size: 1.1rem; /* Увеличенный размер текста */
+    }
+
+    /* Блок "О проекте" */
+    .about-project {
+      background-color: #fff;
+      border-radius: 8px;
+      padding: 1.5rem;
+      box-shadow: 0 0 5px rgba(0,0,0,0.1);
+    }
+
+    .about-project h3 {
+      margin-bottom: 1rem;
+      font-size: 1.3rem;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 0.5rem;
+    }
+
+    .about-project p {
+      margin-bottom: 1rem;
+      line-height: 1.6;
+      font-size: 1.1rem; /* Увеличенный размер текста */
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Шапка / Header -->
+  <header class="header">
+    <!-- Ссылка на профиль (саму себя) -->
+    <a href="{% url 'profile' %}" class="header__profile-link">
+      <img src="https://via.placeholder.com/40" alt="Avatar"/>
+    </a>
+
+    <!-- Ссылка на главную страницу обёрнутая вокруг названия -->
+    <a href="{% url 'home' %}" class="header__title-link">
+      <h1 class="header__title">WayWise</h1>
+    </a>
+  </header>
+
+  <!-- Контейнер страницы профиля -->
+  <div class="profile-container">
+
+    <!-- Карточка профиля -->
+    <div class="profile-card">
+      <h2>Информация о пользователе</h2>
+      
+      <div class="profile-field">
+        <label>Имя:</label>
+        <span>{{ first_name }}</span>
+      </div>
+    
+      <div class="profile-field">
+        <label>Фамилия:</label>
+        <span>{{ last_name }}</span>
+      </div>
+    
+      <div class="profile-field">
+        <label>Почта:</label>
+        <span>{{ email }}</span>
+      </div>
+    </div>
+    
+
+
+    <!-- Блок "О проекте" (о команде) -->
+    <div class="about-project">
+      <h3>О проекте</h3>
+      <p>
+        WayWise — это инновационная платформа для планирования путешествий и обмена маршрутами. Наша миссия — сделать процесс подготовки к поездкам максимально удобным и приятным.
+      </p>
+      <p>
+        Наша команда состоит из опытных разработчиков, дизайнеров и специалистов по продукту, работающих вместе, чтобы предоставить вам лучшие инструменты для организации ваших путешествий.
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>

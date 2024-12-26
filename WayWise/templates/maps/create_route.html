@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Карта – WayWise</title>
+  <style>
+    /* Ваши стили из предыдущего HTML-кода */
+  </style>
+</head>
+<body>
+
+  <!-- Шапка -->
+  <header class="header">
+    <a href="profile.html" class="header__profile-link">
+      <img src="https://via.placeholder.com/40" alt="Avatar"/>
+    </a>
+    <a href="home.html" class="header__title-link">
+      <h1 class="header__title">WayWise</h1>
+    </a>
+  </header>
+
+  <!-- Контейнер страницы карты -->
+  <div class="map-container">
+
+    <!-- Блок для ввода начальной и конечной точек маршрута -->
+    <form method="post" action="{% url 'create_route' %}" class="search-block">
+      {% csrf_token %}
+      <input type="text" name="start_point" placeholder="Начальная точка (широта, долгота)" required>
+      <input type="text" name="end_point" placeholder="Конечная точка (широта, долгота)" required>
+      <button type="submit">Построить маршрут</button>
+    </form>
+
+    <!-- Пример карты -->
+    <div class="map">
+      <span>Здесь будет отображаться карта</span>
+    </div>
+
+    <!-- Увеличенные текстовые блоки -->
+    <div class="text-block">
+      <h2>Информация о маршруте</h2>
+      <p>
+        Введите начальную и конечную точки маршрута, чтобы построить оптимальный маршрут.
+      </p>
+    </div>
+  </div>
+
+</body>
+</html>
