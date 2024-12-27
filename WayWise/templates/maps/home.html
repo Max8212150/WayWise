@@ -228,8 +228,11 @@
       <h1 class="header__title">WayWise</h1>
     </a>
     <div class="header__actions">
-      <a href="{% url 'register' %}" class="header__action">Регистрация</a>
-      <a href="{% url 'login' %}" class="header__action">Вход</a>
+      {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}" class="header__action">Выйти</a>
+      {% else %}
+        <a href="{% url 'login' %}" class="header__action">Войти</a>
+      {% endif %}
     </div>
   </header>
 

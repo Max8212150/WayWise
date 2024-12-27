@@ -3,24 +3,24 @@ from django.contrib.auth import login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from .forms import CustomUserCreationForm, EmailLoginForm
+from .forms import EmailLoginForm, CustomUserCreationForm
 
 
 def register_view(request):
-    """
-    Регистрация пользователя.
-    """
     if request.method == 'POST':
         form = CustomUserCreationForm(request.POST)
         if form.is_valid():
             user = form.save()
-            # Логиним автоматически после регистрации
             login(request, user)
             messages.success(request, 'Регистрация прошла успешно!')
-            return redirect('home')  # на главную
+            return redirect('home')
+        else:
+            print(form.errors)  # Отображение ошибок в консоли
     else:
         form = CustomUserCreationForm()
+
     return render(request, 'users/register.html', {'form': form})
+
 
 
 def login_view(request):

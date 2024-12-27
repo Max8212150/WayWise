@@ -7,24 +7,22 @@ from .models import User
 class CustomUserCreationForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ('username',
-                  'last_name',
-                  'first_name',
-                  'father_name',
-                  'email',
-                  'password1',
-                  'password2')
+        fields = ('username', 'last_name', 'first_name', 'email', 'password1', 'password2')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        # Пример кастомизации лейблов/плейсхолдеров
-        self.fields['username'].label = 'Имя пользователя (логин)'
+        self.fields['username'].label = 'Имя пользователя'
         self.fields['last_name'].label = 'Фамилия'
         self.fields['first_name'].label = 'Имя'
-        self.fields['father_name'].label = 'Отчество'
         self.fields['email'].label = 'Электронная почта'
         self.fields['password1'].label = 'Пароль'
         self.fields['password2'].label = 'Повтор пароля'
+
+        for field_name, field in self.fields.items():
+            field.widget.attrs.update({
+                'class': 'form-control',
+                'placeholder': field.label
+            })
 
 
 class EmailLoginForm(forms.Form):
