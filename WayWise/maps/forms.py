@@ -7,6 +7,7 @@ class SearchForm(forms.Form):
         max_length=100
     )
 
+
 class RouteForm(forms.Form):
     start_coords = forms.CharField(
         label='Начальные координаты (широта, долгота)',
